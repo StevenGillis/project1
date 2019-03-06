@@ -1,0 +1,24 @@
+Get flask running:
+
+
+
+setup flask:
+export FLASK_APP=application.py
+set DATABASE_URL=ec2-54-75-232-114.eu-west-1.compute.amazonaws.com
+
+
+export FLASK_DEBUG=1
+
+
+
+
+run flask:
+python -m flask run
+
+debug mode off
+
+Jinja in HTML: {% if christmas%}
+                <h1> yes it's christmas </h1>
+               {% else %}
+                <h1> yes it's christmas </h1>
+                {% endif %}

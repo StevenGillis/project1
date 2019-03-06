@@ -1,0 +1,13 @@
+0a) Refresh memory and look at CS50 work of earlier course
+0b) Design interfaces (paper)
+0c) Design DB => user, sessions, books, searches
+
+
+1) Main page
+
+
+2) Book page
+
+
+3) Login
+

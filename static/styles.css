@@ -1,0 +1,29 @@
+        @media (min-width: 500px) {
+            body {
+                background-color: white;
+             }
+        }
+        @media (max-width: 499px) {
+            body {
+                background-color: grey;
+                }
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .container > div {
+            Background-color: springgreen;
+            font-size: 20px;
+            margin: 20px;
+            padding: 20px;
+            width: 400px;
+            height: 100px;
+        }
+        .section  {
+                background-color: grey;
+                border:1px solid black;
+                margin: 20px;
+                padding: 20px;
+         }
