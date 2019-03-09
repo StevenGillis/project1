@@ -7,8 +7,9 @@
 {% block body %}
     <div id="search" class = "section">
         <form>
-          Search book: <input type="text" name="search"><br>
+          Search book: <input type="text" name="search" placeholder="type a isbn"><br><button class="btn btn-lg btn-primary btn-block">Search</button>
             {{searchResult}}
+            {{resReview}}
         </form>
     </div>
 

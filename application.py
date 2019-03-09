@@ -4,8 +4,14 @@ from flask import Flask, session, render_template
 import psycopg2 ##Connect to Heroku with ssl
 from flask_session import Session
 import datetime
+import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+
+#Params API
+KEY = "MKXQATZ9XR0Mc2dJDyw01Q"
+isbns = 9781632168146
+#searchword = "Harry"
 
 app = Flask(__name__)
 app.debug = True
@@ -19,6 +25,7 @@ app.debug = True
 #app.config["SESSION_TYPE"] = "filesystem"
 
 #Session(app)
+#Sessions explained in movie lecture two last part 'notes'
 
 # Set up database
 
@@ -33,9 +40,18 @@ cur=conn.cursor()
 @app.route("/")
 def index():
     #searchResult=conn.execute("SELECT * FROM book").fetchall()
-    cur.execute("""SELECT * FROM book b;""")
+    cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b;")
     searchResult = cur.fetchall()
-    return render_template("index.html",searchResult=searchResult)
+    print(searchResult)
+
+    def getreview(KEY, isbns):
+       resReview = requests.get("https://www.goodreads.com/book/review_counts.json",
+                                params={"key": KEY, "isbns": isbns})
+       return resReview.text
+       print(resReview.text)
+
+    resReview=getreview(KEY, isbns)
+    return render_template("index.html", searchResult=searchResult, resReview=resReview)
 
 @app.route("/book/<string:name>")
 def book(name):
