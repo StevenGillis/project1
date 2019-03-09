@@ -8,6 +8,7 @@
     <div id="search" class = "section">
         <form>
           Search book: <input type="text" name="search"><br>
+            {{searchResult}}
         </form>
     </div>
 
@@ -20,11 +21,9 @@
     <div id="searchResultOverview" class = "section">
         <h1>Search results</h1>
         <div id="searchResult" class = "container">
-            <div> Search result 1 </div>
-            <div> Search result 2 </div>
-            <div> Search result 3 </div>
-            <div> Search result 4 </div>
-            <div> Search result 5 </div>
+            {% for book in searchResult %}
+            <div> {{book}} </div>
+            {% endfor %}
         </div>
     </div>
 

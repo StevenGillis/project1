@@ -4,8 +4,10 @@ Get flask running:
 
 setup flask:
 export FLASK_APP=application.py
-set DATABASE_URL=ec2-54-75-232-114.eu-west-1.compute.amazonaws.com
+export DATABASE_URL="postgres://anxgkrduzonffo:870af2c45e8670df00a278345b73b5a2a915bc3a3a69aa067f130ddb0fb749@ec2-54-75-232-114.eu-west-1.compute.amazonaws.com:5432/d75mvmma11fn7f"
 
+New
+export DATABASE_URL="postgres://anxgkrduzonffo:870af2c45e8670df00a278345b73b5a2a915bc3a3a69aa067f130ddb0fb749@ec2-54-75-232-114.eu-west-1.compute.amazonaws.com:5432/d75mvmma11fn7f"
 
 export FLASK_DEBUG=1
 
