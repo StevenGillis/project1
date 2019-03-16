@@ -1,14 +1,30 @@
 {% extends "layout.html" %}
 
 {% block heading %}
-    register page
+    <div id="headerbar" class = "section headerbar">
+        <h3>Steven's assignment</h3>
+    </div>
 {% endblock %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
 {% block body %}
-
-    <p>
-
-        test register page
-    </p>
-
+    <div class = "section">
+        <form action="/login" method="post">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text"/>
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="password" placeholder="Password" type="password"/>
+            </div>
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </form>
+    </div>
 {% endblock %}

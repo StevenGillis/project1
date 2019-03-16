@@ -1,13 +1,15 @@
 {% extends "layout.html" %}
 
 {% block heading %}
-    First Page
+    <div id="headerbar" class = "section headerbar">
+        <h3>Steven's assignment</h3>
+    </div>
 {% endblock %}
 
 {% block body %}
     <div id="search" class = "section">
         <form action="/" method="post">
-          Search book: <input type="text" name="search" placeholder="type a isbn"><br>
+          Search book: <input type="text" name="search" placeholder="type a isbn" onclick="searchBook()"><br>
         <input type="submit" value="Submit">
         </form>
     </div>
