@@ -1,15 +1,48 @@
 {% extends "layout.html" %}
 
 {% block heading %}
-    First Page
+    <div id="headerbar" class = "section headerbar">
+        <h3>Steven's assignment</h3>
+    </div>
 {% endblock %}
 
 {% block body %}
-    <div id="header" class = "section, header">
-    <p>
-        this is the book:{{name}}
-    </p>
+    <div id="search" class = "section">
+        <form action="/book" method="post">
+          Search book: <input type="text" name="search" placeholder="type a isbn"><br>
+        <input type="submit" value="Submit">
+        </form>
+    </div>
 
+    <div id="Bookinfo" class = "section">
+        <h2>Book details:</h2>
+        <p>Title: {{title}}</p>
+        <p>Author: {{author}}</p>
+        <p>Year: {{year}}</p>
+        <p>isbns: {{isbns}}</p>
+    </div>
+
+    <div id="GoodreadReviews" class = "section">
+        <h2>Goodreads user rating</h2>
+        <p>Rating:{{current_book_rating}}</p>
+        <p>Rating count: {{current_book_rating_count}}</p>
+    </div>
+    <div id="Reviews" class = "section">
+
+        <!---###Borrowed this code from codepen.io--->
+       <div class="rate">
+            <input type="radio" id="star5" name="rate" value="5" />
+            <label for="star5" title="text">5 stars</label>
+            <input type="radio" id="star4" name="rate" value="4" />
+            <label for="star4" title="text">4 stars</label>
+            <input type="radio" id="star3" name="rate" value="3" />
+            <label for="star3" title="text">3 stars</label>
+            <input type="radio" id="star2" name="rate" value="2" />
+            <label for="star2" title="text">2 stars</label>
+            <input type="radio" id="star1" name="rate" value="1" />
+            <label for="star1" title="text">1 star</label>
+        </div>
+    </div>
 {% endblock %}
 
 

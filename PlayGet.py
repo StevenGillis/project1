@@ -9,11 +9,11 @@ def main(KEY,isbns):
     resReview = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": KEY, "isbns": isbns})
     print(resReview.text)
 
-def getBasicInfo(isbns):
-    GetGoodreadID = requests.get("https://www.goodreads.com/book/isbn_to_id.json", params={"isbns": isbns})
+def getBasicInfo(KEY, isbns):
+    basicInfo = requests.get("https://www.goodreads.com/book/show.json", params={"format": "json","""key": KEY, "GetGoodreadID ": GetGoodreadID })
+    print(basicInfo)
+    return basicInfo
 
-    basicInfo = requests.get("https://www.goodreads.com/book/show.json", params={"GetGoodreadID ": GetGoodreadID })
-    print(basicInfo.text)
 
 def search(KEY, searchword):
     resSearch = requests.get("https://www.goodreads.com//search/index.xml",
@@ -21,7 +21,9 @@ def search(KEY, searchword):
     print(resSearch.text)
 
 if __name__ == "__main__":
-    main(KEY, isbns)
-    getBasicInfo(isbns)
+
+    main(KEY,isbns)
+    getBasicInfo(KEY, isbns)
+
 
     #search(KEY, searchword)

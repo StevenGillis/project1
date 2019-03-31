@@ -9,19 +9,12 @@
 {% block body %}
     <div id="search" class = "section">
         <form action="/" method="post">
-          Search book: <input type="text" name="search" placeholder="type a isbn" onclick="searchBook()"><br>
+          Search book: <input type="text" name="search" placeholder="type a isbn"><br>
         <input type="submit" value="Submit">
         </form>
     </div>
-
-    <div id="Upload" class = "section">
-        <form>
-          Upload book list: <input type="file" accept=".csv" />
-        </form>
-    </div>
-
     <div id="searchResultOverview" class = "section">
-        <h1>Search results</h1>
+        <h1>Book overview</h1>
         <div id="searchResult" class = "container">
             {% for book in searchResult %}
             <div> {{book}} </div>

@@ -1,7 +1,7 @@
 import os
 
-from flask import Flask, session, render_template, request, flash
-import psycopg2 ##Connect to Heroku with ssl
+from flask import Flask, session, render_template, request
+import psycopg2  ##Connect to Heroku with ssl
 from flask_session import Session
 import json
 import datetime
@@ -9,8 +9,9 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-#what is hard: psycopg (ssl required)
-#Make nice: User login
+#  Notes:
+#  what is hard: psycopg (ssl required) / Never call index just "/" you never find in error messages
+#  Make nice: User login
 
 #Params API
 KEY = "MKXQATZ9XR0Mc2dJDyw01Q"
@@ -18,25 +19,21 @@ isbns = 9781632168146
 
 app = Flask(__name__)
 app.debug = True
-DATABASE_URL="postgres://anxgkrduzonffo:870af2c45e8670df00a278345b73b5a2a915bc3a3a69aa067f130ddb0fb749@ec2-54-75-232-114.eu-west-1.compute.amazonaws.com:5432/d75mvmma11fn7f"
+#  DATABASE_URL="postgres://anxgkrduzonffo:870af2c45e8670df00a278345b73b5a2a915bc3a3a69aa067f130ddb0fb749@ec2-54-75-232-114.eu-west-1.compute.amazonaws.com:5432/d75mvmma11fn7f"
 
-# Check for environment variable
-#if not os.getenv("DATABASE_URL"):
+#  Check for environment variable
+#  if not os.getenv("DATABASE_URL"):
   # raise RuntimeError("DATABASE_URL is not set")
 
-# Configure session to use filesystem
+#  Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
 Session(app)
-#Sessions explained in movie lecture two last part 'notes'
+#  Sessions explained in movie lecture two last part 'notes'
 
 # Set up database
-
-#DATABASE_URL=os.environ['DATABASE_URL']
-#conn=psycopg2.connect(DATABASE_URL, sslmode='require')
-
-conn=psycopg2.connect(host="ec2-54-75-232-114.eu-west-1.compute.amazonaws.com", database="d75mvmma11fn7f", user="anxgkrduzonffo", password="870af2c45e8670df00a278345b73b5a2a915bc3a3a69aa067f130d9ddb0fb749",sslmode='require')
+conn=psycopg2.connect(host="ec2-54-75-230-253.eu-west-1.compute.amazonaws.com", database="ddhqmc7s71fdfd", user="jshhhhyjozsciy", password="4cd98e27c32c3929124ca31c8947708756556b5582b0ff1fe66895990667c562",sslmode='require')
 cur=conn.cursor()
 #engine = create_engine(conn)
 #db = scoped_session(sessionmaker(bind=engine))
@@ -47,29 +44,53 @@ cur=conn.cursor()
 def index():
     if session.get("user_id") is None:
         return render_template("/login.html")
+    if request.method == "GET":
+        cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b LIMIT 24;")
+        searchResult = cur.fetchall()
+        username = session["user_id"]
+        return render_template("index.html", searchResult=searchResult, username=username)
+    if request.method == "POST":
+        isbns = request.form.get("search")
+        book(isbns)
+        # return render_template("book.html", isbns = isbns)
 
-    cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b LIMIT 24;")
-    searchResult = cur.fetchall()
-    username = session["user_id"]
-    def getreview(KEY, isbns):
-       resReview = requests.get("https://www.goodreads.com/book/review_counts.json",
-                                params={"key": KEY, "isbns": isbns})
-       return resReview.text
-
-    ####This doesn't work anymore
-    def searchBook():
-            lookup_input = request.form.get("search")
-            review=getreview(KEY, lookup_input)
-            return render_template("book.html", name=review)
-
-    resReview=getreview(KEY, isbns)
-    return render_template("index.html", searchResult=searchResult, resReview=resReview, username=username)
-
-@app.route("/book/<string:name>")
-def book(name):
+@app.route("/book/<string:isbns>", methods=["GET", "POST"])
+def book(isbns):
     if session.get("user_id") is None:
         return render_template("/login.html")
-    return render_template("book.html",name=name)
+    if request.method == "POST":
+        print("it is post")
+        #rating = request.form.get("rate")
+        # returns Json file with review data
+        def getreview(KEY, isbns):
+           res = requests.get("https://www.goodreads.com/book/review_counts.json",
+                                    params={"key": KEY, "isbns": isbns})
+           if res:
+                return res.content
+           else:
+               return render_template("error.html", message="Book not found on Goodreads database")
+
+        def getdetails(isbns):
+            cur.execute("SELECT * FROM book WHERE isbn = '%s';" % isbns)
+            data=cur.fetchone()
+            if data:
+                title=data[1]
+                author = data[2]
+                year = data[3]
+                return title, author, year
+            else:
+                return render_template("error.html", message="Book not found in my website's database")
+        review=getreview(KEY, isbns)
+        data = json.loads(review)
+        current_book_rating = float(data['books'][0]['average_rating'])
+        current_book_rating_count = float(data['books'][0]['work_ratings_count'])
+        print(getdetails(isbns))
+        title, author, year=getdetails(isbns)
+
+        return render_template("book.html", current_book_rating_count=current_book_rating_count, current_book_rating=current_book_rating, title=title, author=author, year=year, isbns=isbns)
+    else:
+        print("it is get")
+        return render_template("book.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -92,7 +113,6 @@ def login():
         username=request.form.get("username")
         cur.execute("SELECT * FROM visitor WHERE username = '%s';"%username)
         rows=cur.fetchall()
-        print(rows)
         # Ensure username exists and password is correct or not request.form.get("password")
         if len(rows) != 1 or rows[0][1] != request.form.get("password"):
             return render_template("error.html", message="Invalid username or password")
@@ -144,6 +164,8 @@ def register():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
+
+
 
 @app.route("/error")
 def error():
