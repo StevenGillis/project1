@@ -36,7 +36,7 @@ Session(app)
 #DATABASE_URL=os.environ['DATABASE_URL']
 #conn=psycopg2.connect(DATABASE_URL, sslmode='require')
 
-conn=psycopg2.connect(host="ec2-54-75-232-114.eu-west-1.compute.amazonaws.com", database="d75mvmma11fn7f", user="anxgkrduzonffo", password="870af2c45e8670df00a278345b73b5a2a915bc3a3a69aa067f130d9ddb0fb749",sslmode='require')
+conn=psycopg2.connect(host="ec2-54-75-230-253.eu-west-1.compute.amazonaws.com", database="ddhqmc7s71fdfd", user="jshhhhyjozsciy", password="4cd98e27c32c3929124ca31c8947708756556b5582b0ff1fe66895990667c562",sslmode='require')
 cur=conn.cursor()
 #engine = create_engine(conn)
 #db = scoped_session(sessionmaker(bind=engine))
@@ -51,19 +51,17 @@ def index():
     cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b LIMIT 24;")
     searchResult = cur.fetchall()
     username = session["user_id"]
-    def getreview(KEY, isbns):
-       resReview = requests.get("https://www.goodreads.com/book/review_counts.json",
-                                params={"key": KEY, "isbns": isbns})
-       return resReview.text
-
-    ####This doesn't work anymore
+    return render_template("index.html", searchResult=searchResult, username=username)
+    #  If is post
+    """
+        def getreview(KEY, isbns):
+           resReview = requests.get("https://www.goodreads.com/book/review_counts.json",
+                                    params={"key": KEY, "isbns": isbns})
+           return resReview.text
+"""
     def searchBook():
-            lookup_input = request.form.get("search")
-            review=getreview(KEY, lookup_input)
-            return render_template("book.html", name=review)
-
-    resReview=getreview(KEY, isbns)
-    return render_template("index.html", searchResult=searchResult, resReview=resReview, username=username)
+        #resReview=searchBook()
+        return render_template("error.html", message="Search result invalid")
 
 @app.route("/book/<string:name>")
 def book(name):
@@ -92,7 +90,6 @@ def login():
         username=request.form.get("username")
         cur.execute("SELECT * FROM visitor WHERE username = '%s';"%username)
         rows=cur.fetchall()
-        print(rows)
         # Ensure username exists and password is correct or not request.form.get("password")
         if len(rows) != 1 or rows[0][1] != request.form.get("password"):
             return render_template("error.html", message="Invalid username or password")
@@ -149,3 +146,9 @@ def register():
 def error():
     """Define error message"""
     return render_template("error.html")
+
+@app.route("/logout")
+def logout():
+    # Forget any user_id
+    session.clear()
+    return render_template("login.html")

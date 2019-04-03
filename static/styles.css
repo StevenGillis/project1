@@ -12,7 +12,6 @@
             display: flex;
             flex-wrap: wrap;
         }
-
         .container > div {
             Background-color: springgreen;
             font-size: 20px;
@@ -29,4 +28,8 @@
          }
         .headerbar     {
                 text-align: center;
+        }
+        .logoutbutton {
+                float:right;
+                font-size: 20px;
         }
