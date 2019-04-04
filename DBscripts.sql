@@ -1,3 +1,1 @@
-SELECT * FROM book
-
-select * from book where isbn = '080213825X'
+SELECT author, average_score, isbn, review_count, title,year FROM book b where isbn like ('%05%') or author like ('%s%') or title like ('%s%') LIMIT 24;

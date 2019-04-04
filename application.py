@@ -9,7 +9,7 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-#what is hard: psycopg (ssl required)
+#what is hard: psycopg (ssl required) Mysql in python, especially with % for 'like' they mean something else in python, I hate exception e.g. search need to be capitals
 #Make nice: User login
 
 #Params API
@@ -59,14 +59,25 @@ def index():
                                     params={"key": KEY, "isbns": isbns})
            return resReview.text
 """
-    def searchBook():
-        #resReview=searchBook()
-        return render_template("error.html", message="Search result invalid")
 
     def logout():
         # Forget any user_id
         session.clear()
         return render_template("login.html")
+
+@app.route("/search", methods=["POST"])
+def search():
+    if session.get("user_id") is None:
+        return render_template("/login.html")
+    username = session["user_id"]
+    search=request.form.get("search")
+    print(search)
+    cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b where isbn like ('%%%s%%') or author like ('%%%s%%') or title like ('%%%s%%') LIMIT 48;"%(search,search,search))
+    searchResult = cur.fetchall()
+    print(searchResult)
+    return render_template("search.html", searchResult=searchResult, username=username)
+
+    return render_template("error.html", message="Search result invalid")
 
 @app.route("/book/<string:name>")
 def book(name):
