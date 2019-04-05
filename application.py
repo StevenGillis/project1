@@ -83,12 +83,13 @@ def search():
 def book(isbn):
     if session.get("user_id") is None:
         return render_template("/login.html")
-
-    print(isbn)
     cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b where isbn = '%s' ;"%isbn)
     bookDetail = cur.fetchone()
-    print(bookDetail)
-    return render_template("book.html", bookDetail = bookDetail)
+    GRReview = requests.get("https://www.goodreads.com/book/review_counts.json",
+                                 params={"key": KEY, "isbns": isbn}).json()["books"][0]
+    ratingCount=GRReview["ratings_count"]
+    avgRating=GRReview["average_rating"]
+    return render_template("book.html", bookDetail = bookDetail, ratingCount=ratingCount, avgRating=avgRating )
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
