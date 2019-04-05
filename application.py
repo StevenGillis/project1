@@ -79,11 +79,16 @@ def search():
 
     return render_template("error.html", message="Search result invalid")
 
-@app.route("/book")
-def book():
+@app.route("/book/<string:isbn>")
+def book(isbn):
     if session.get("user_id") is None:
         return render_template("/login.html")
-    return render_template("book.html")
+
+    print(isbn)
+    cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b where isbn = '%s' ;"%isbn)
+    bookDetail = cur.fetchone()
+    print(bookDetail)
+    return render_template("book.html", bookDetail = bookDetail)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

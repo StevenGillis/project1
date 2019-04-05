@@ -19,7 +19,7 @@
         <h1>Book overview</h1>
             <div id="searchResult" class = "container">
                 {% for book in searchResult %}
-                <div> {{book}} <a href="/book">details</a> </div>
+                <div> {{book}} <a href="{{ url_for('book', isbn = book.2) }}">details</a> </div>
                 {% endfor %}
             </div>
     </div>
