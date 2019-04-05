@@ -79,11 +79,11 @@ def search():
 
     return render_template("error.html", message="Search result invalid")
 
-@app.route("/book/<string:name>")
-def book(name):
+@app.route("/book")
+def book():
     if session.get("user_id") is None:
         return render_template("/login.html")
-    return render_template("book.html",name=name)
+    return render_template("book.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

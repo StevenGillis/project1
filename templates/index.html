@@ -17,11 +17,11 @@
     </div>
     <div id="searchResultOverview" class = "section">
         <h1>Book overview</h1>
-        <div id="searchResult" class = "container">
-            {% for book in searchResult %}
-            <div> {{book}} </div>
-            {% endfor %}
-        </div>
+            <div id="searchResult" class = "container">
+                {% for book in searchResult %}
+                <div> {{book}} <a href="/book">details</a> </div>
+                {% endfor %}
+            </div>
     </div>
 
 {% endblock %}
