@@ -20,21 +20,31 @@
         <p>Rating:{{avgRating}}</p>
         <p>Rating count: {{ratingCount}}</p>
     </div>
-    <div id="Reviews" class = "section">
+    <form action = "{{ url_for('book', isbn = bookDetail.2) }}" method="post">
+        <div id="Reviews" class = "section">
+            <h2>Leave your review</h2>
+            <!---###Borrowed this code from codepen.io--->
+           <div class="rate">
+                <input type="radio" id="star5" name="rate" value="5" />
+                <label for="star5" title="text">5 stars</label>
+                <input type="radio" id="star4" name="rate" value="4" />
+                <label for="star4" title="text">4 stars</label>
+                <input type="radio" id="star3" name="rate" value="3" />
+                <label for="star3" title="text">3 stars</label>
+                <input type="radio" id="star2" name="rate" value="2" />
+                <label for="star2" title="text">2 stars</label>
+                <input type="radio" id="star1" name="rate" value="1" />
+                <label for="star1" title="text">1 star</label>
+            </div>
+            <div class="form-group">
 
-        <!---###Borrowed this code from codepen.io--->
-       <div class="rate">
-            <input type="radio" id="star5" name="rate" value="5" />
-            <label for="star5" title="text">5 stars</label>
-            <input type="radio" id="star4" name="rate" value="4" />
-            <label for="star4" title="text">4 stars</label>
-            <input type="radio" id="star3" name="rate" value="3" />
-            <label for="star3" title="text">3 stars</label>
-            <input type="radio" id="star2" name="rate" value="2" />
-            <label for="star2" title="text">2 stars</label>
-            <input type="radio" id="star1" name="rate" value="1" />
-            <label for="star1" title="text">1 star</label>
+              <textarea class="form-control" rows="10" cols="50" name="comment"></textarea>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Share review</button>
         </div>
+    </form>
+
     </div>
 {% endblock %}
 

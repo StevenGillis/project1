@@ -1,1 +1,20 @@
-SELECT author, average_score, isbn, review_count, title,year FROM book b where isbn like ('%05%') or author like ('%s%') or title like ('%s%') LIMIT 24;
+select
+    r.book_id,
+    r."id",
+    r.review_score,
+    r.visitor_id
+from
+    review r;
+
+select
+    b.author,
+    b.average_score,
+    b."id",
+    b.isbn,
+    b.review_count,
+    b.title,
+    b."year"
+from
+    book b;
+
+SELECT * FROM review where book_id = 3665 AND visitor_id = 9;

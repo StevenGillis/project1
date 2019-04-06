@@ -79,17 +79,45 @@ def search():
 
     return render_template("error.html", message="Search result invalid")
 
-@app.route("/book/<string:isbn>")
+@app.route("/book/<string:isbn>", methods=["GET", "POST"])
 def book(isbn):
     if session.get("user_id") is None:
         return render_template("/login.html")
-    cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b where isbn = '%s' ;"%isbn)
-    bookDetail = cur.fetchone()
-    GRReview = requests.get("https://www.goodreads.com/book/review_counts.json",
-                                 params={"key": KEY, "isbns": isbn}).json()["books"][0]
-    ratingCount=GRReview["ratings_count"]
-    avgRating=GRReview["average_rating"]
-    return render_template("book.html", bookDetail = bookDetail, ratingCount=ratingCount, avgRating=avgRating )
+
+    if request.method == "GET":
+        cur.execute("SELECT author, average_score, isbn, review_count, title,year FROM book b where isbn = '%s' ;"%isbn)
+        #  Implement if query returns error
+        bookDetail = cur.fetchone()
+        GRReview = requests.get("https://www.goodreads.com/book/review_counts.json",
+                                     params={"key": KEY, "isbns": isbn}).json()["books"][0]
+        ##Implement errors
+        ratingCount=GRReview["ratings_count"]
+        avgRating=GRReview["average_rating"]
+        return render_template("book.html", bookDetail = bookDetail, ratingCount=ratingCount, avgRating=avgRating )
+
+    if request.method == "POST":
+        visitorRating = request.form.get("rate")
+        visitorComment = request.form.get("comment")
+        username = session["user_id"]
+        cur.execute(
+            "SELECT id FROM book b where isbn = '%s' ;" % isbn)
+        #  Implement if query returns error
+        bookId = cur.fetchone()
+        bookId = bookId[0]
+        #  Only allow a review if that user didn't review that same book before
+        print(bookId)
+        print(username)
+        cur.execute(
+            "SELECT * FROM review where book_id = %s AND visitor_id = %s;", (bookId, username))
+            #"SELECT * FROM review where book_id = 3665 and visitor_id = 9;")
+        testvar = cur.fetchone()
+        print(testvar)
+        if testvar is None:
+            cur.execute("INSERT INTO review (book_id, review_score, visitor_id, comment) VALUES(%s, %s, %s, %s)", (bookId, visitorRating,username,visitorComment))
+            conn.commit()
+            return render_template("error.html", message="Thanks for leaving a review!")
+        else:
+            return render_template("error.html", message="You already reviewed this book")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
