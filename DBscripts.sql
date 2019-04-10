@@ -1,9 +1,4 @@
-select
-    r.book_id,
-    r."id",
-    r.review_score,
-    r.visitor_id
-from
+select * from
     review r;
 
 select
@@ -17,4 +12,4 @@ select
 from
     book b;
 
-SELECT * FROM review where book_id = 3665 AND visitor_id = 9;
+SELECT * FROM review;

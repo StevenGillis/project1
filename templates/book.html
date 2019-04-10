@@ -44,7 +44,17 @@
                 <button class="btn btn-primary" type="submit">Share review</button>
         </div>
     </form>
-
+    </div>
+    <div id="ReviewsOverview" class = "section">
+        <h2>Reviews left on Steven's website</h2>
+            <div id="reviewResult" class = "container">
+                {% for book in reviewResult %}
+                <div>
+                    <div>Rating: {{book.0}}</div>
+                    <div>Review: {{book.1}}</div>
+                </div>
+                {% endfor %}
+            </div>
     </div>
 {% endblock %}
 
